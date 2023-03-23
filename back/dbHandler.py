@@ -1,5 +1,7 @@
 
 import os
+from nltk.stem.snowball import FrenchStemmer
+
 
 
 def table_data(MyTable):
@@ -85,10 +87,13 @@ def delete_all_tables(db,textes_table,frequences_table,mots_uniques_table):
 file_path = './files/'
 
 def search_word_db(db,word):
-
     mot_response = []
     formatted_data = []
-    # Stem the word before starting search 
+    # Stem the word before starting research 
+    stemmer = FrenchStemmer()
+    word = stemmer.stem(word)
+    print("Stem => "+word)
+    # Search the word on mots_uniques table.
     with db.engine.begin() as conn:
         mot_response = conn.exec_driver_sql(f"SELECT * FROM mots_uniques WHERE mots_uniques.mot = '{word}'").all()
     # The word doesn't exist in files 
