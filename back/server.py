@@ -19,7 +19,6 @@ app = Flask(__name__)
 # Configure the database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://tooken_user:password@localhost:5432/tp_tooken_db'
 engine = create_engine("postgresql:///tooken_user:password@localhost:5432/tp_tooken_db")
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -49,11 +48,11 @@ class frequencesTable(db.Model):
     frequence = db.Column(db.Integer)
 
 
+gloabl_file_content = []
+
 @app.route("/tokens", methods=['POST'])
 def get_current_time():
-
-
-    # Vider les tables existantes
+    # Empty tables
     try :
         print(delete_all_tables(db,textesTable,frequencesTable,motsUniquesTable)) 
     except Exception as e:
@@ -62,32 +61,29 @@ def get_current_time():
     file_content_list = file_content('./files')
     print(file_content_list)
 
-
     for file in file_content_list :
         file_name = file["file_name"]
-        text = file["content"]    
-        # Tookenizer le text 
+        text = file["content"]  
+
+        # Text tookenization
         try :
             mot_freq = fileTookenizer(text) 
         except Exception as e:
             print("Error in function fileTookenizer ",str(e))
 
-        # Sauvegarder le nom du text dans la db
+        # Save the text name in the data table 
         try :
             new_text_id = save_text(db,textesTable ,file_name)
         except Exception as e:
             print("Error in function save_text ",str(e))
 
-        # Sauvegarder les mots dans la table mots_uniques + frequences
+        # Save words on tales mots_uniques + freqences
         try :
             resp = save_mots_uniques(db,motsUniquesTable,frequencesTable,mot_freq, new_text_id)
         except Exception as e:
             print("Error in function save_mots_uniques ",str(e))
 
         print(mot_freq)
-        # mot_freq = mot_freq.update(mot_freq)
-
-
     print(mot_freq)
     return mot_freq
 
@@ -103,11 +99,9 @@ def search_word():
     except Exception as e:
         print("Error in function search_word ",str(e))
 
-    return "OK"
+    return text_freq
 
     
-
-
 
 if __name__ == "__main__" :
     app.run(debug=True)

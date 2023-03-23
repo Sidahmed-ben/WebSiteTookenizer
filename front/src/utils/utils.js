@@ -1,5 +1,4 @@
 export const Utils = () => {
-  // This function handles getting images from the specified website url
   function readFile(path) {
     fetch(path)
       .then((r) => r.text())

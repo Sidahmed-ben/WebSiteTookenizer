@@ -1,4 +1,7 @@
 
+import os
+
+
 def table_data(MyTable):
     # Query the table
     data = MyTable.query.all()
@@ -10,7 +13,6 @@ def table_data(MyTable):
             'titre': row.titre,
             'contenu': row.contenu
         })
-    
     # Return the data as JSON
     return {'data': formatted_data}
 
@@ -80,15 +82,15 @@ def delete_all_tables(db,textes_table,frequences_table,mots_uniques_table):
     return 'All tables have been emptied!'
 
     
-
+file_path = './files/'
 
 def search_word_db(db,word):
 
     mot_response = []
     formatted_data = []
+    # Stem the word before starting search 
     with db.engine.begin() as conn:
         mot_response = conn.exec_driver_sql(f"SELECT * FROM mots_uniques WHERE mots_uniques.mot = '{word}'").all()
-    
     # The word doesn't exist in files 
     if(len(mot_response) == 0):
         return []
@@ -101,17 +103,17 @@ def search_word_db(db,word):
             query = f"SELECT textes.titre, frequences.frequence FROM frequences INNER JOIN textes ON frequences.texte_id = textes.id WHERE frequences.mot_unique_id = '{word_id}'"
             text_freq = conn.exec_driver_sql(query).all()
 
-        #Search the frequency of the appearence of the word in eacch file 
+        # Search the frequency of the appearence of the word in each file 
         for row in text_freq:
-            formatted_data.append({
-            'texte_title': row[0],
-            'frequences': row[1],
-        })
+            with open(file_path+row[0], 'r') as f:
+                formatted_data.append({
+                    'texte_title': row[0],
+                    'frequences': row[1],
+                    'content': f.read(),
+                })
 
         print(formatted_data)
 
-    # print("///////////////////::", response)
-
-    return 'All tables have been emptied!'
+    return formatted_data
 
 

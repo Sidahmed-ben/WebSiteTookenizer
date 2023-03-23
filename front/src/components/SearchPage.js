@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { dbApi } from "../hooks/dp_api";
 import JSON5 from "json5";
 
@@ -12,12 +11,13 @@ function SearchPage() {
     try {
       searchWord(query)
         .then((data) => {
-          console.log(" Received data => ", data);
+          const object = JSON5.parse(data);
+          console.log(" Received data => ", object);
+          setResults(object);
         })
         .catch((error) => {
           console.error(error);
         });
-      setResults([{ id: 0, name: "Sidahmed", count: 10 }]);
     } catch (error) {
       console.log(error);
     }
@@ -52,26 +52,41 @@ function SearchPage() {
         </div>
       </div>
 
-      {results.length > 0 && (
-        <div className="row mt-5">
-          <div className="col-md-6">
-            <ul className="list-group">
-              {results.map((item) => (
-                <li
-                  key={item.id}
-                  className="list-group-item d-flex justify-content-between align-items-center"
-                  onClick={() => handleItemClick(item)}
-                >
-                  {item.name}
-                  <span className="badge badge-primary badge-pill">
-                    {item.count}
-                  </span>
-                </li>
-              ))}
-            </ul>
+      <div class="col-12 col-sm-12 col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="media-list position-relative">
+              <div
+                class="table-responsive"
+                id="project-team-scroll"
+                tabindex="1"
+                style={{ height: "400px", overflow: "hidden", outline: "none" }}
+              >
+                {results.length > 0 && (
+                  <table class="table table-hover table-xl mb-0">
+                    <thead>
+                      <tr>
+                        <th>File Name</th>
+                        <th>Word Frequence</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {results.map((item) => (
+                        <tr key={item.texte_title}>
+                          <td class="text-truncate">{item.texte_title}</td>
+                          <td class="text-truncate">{item.frequences}</td>
+                          <td class="text-truncate"> Content </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -9,40 +9,32 @@ from nltk.stem.snowball import FrenchStemmer
 def fileTookenizer(text):
     symboles = ["'",'.', ',', ';', ':', '!', '?', '"', '(', ')', '[', ']', '{', '}', '+', '-', '*', '/', '=', '<', '>', '≤', '≥', '%', '$', '€', '£', '¥', '元', '@', '#', '&', '~', '/', '\\', '¿', '☎', '✉', '❌', '✔', 'ℹ', '⚠', '❓', '⏰', '📅', '📆', '🎂', '←', '→', '↑', '↓', '👉', '🏠', '⭐', '❤']
     symboles = set(symboles)
-    # télécharger les stopwords si nécessaire
+    # Download stopword list
     nltk.download('stopwords')
-    # initialiser le stemmer pour la langue française
+    # stemmer initializer
     stemmer = FrenchStemmer()
     # Replace symboles by spaces
     for symb in symboles :
         # print("symbole => ",symb)
         text = text.replace(symb, " ")
     # print("================> ",text)
-    # convertir le texte en minuscules et le diviser en mots
+    # Convert to lowerCase
     words = nltk.word_tokenize(text.lower())
-    # print(words)
-    # récupérer les stopwords de la langue française
-    stop_words = set(stopwords.words('french'))
-    # Rajouter les symboles aux stop_words
-    stop_words = stop_words.union(symboles) 
-    # initialiser un dictionnaire pour stocker les mots et leurs occurrences
-    # print(stop_words)
+    # Get stopWords
+    stop_words = set(stopwords.words('french')) 
     word_freq = {}
-    # parcourir chaque mot dans la liste de mots
+    # Loop words
     for word in words:
-        # ignorer les stopwords
         if (word not in stop_words) and (len(word)>2):
-            # appliquer la racinisation (stemming) pour obtenir le mot de base
+            # Use stemmer for words
             word = stemmer.stem(word)
-            # ajouter le mot et son occurrence au dictionnaire
+            # Add the word as key and frequence as value
             if word not in word_freq:
                 word_freq[word] = 1
             else:
                 word_freq[word] += 1
         else :
             continue
-            # print(word)
-    # Afficher les mots avec leurs fréquences
     # print(word_freq)
     response = word_freq
 

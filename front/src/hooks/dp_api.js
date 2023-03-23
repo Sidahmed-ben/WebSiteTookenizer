@@ -1,5 +1,4 @@
 export const dbApi = () => {
-  // This function handles getting images from the specified website url
   const sendText = async (titre, text) => {
     return fetch("/tokens", {
       method: "POST",
@@ -20,10 +19,10 @@ export const dbApi = () => {
   const searchWord = async (word) => {
     return fetch("/search_word", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ word }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        word,
+      }),
     })
       .then((resp) => {
         const data = resp.text();
