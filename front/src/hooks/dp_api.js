@@ -1,6 +1,6 @@
 export const dbApi = () => {
   const sendText = async (titre, text) => {
-    return fetch("/tokens", {
+    return fetch("/api/tokens", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,7 +17,7 @@ export const dbApi = () => {
   };
 
   const searchWord = async (word) => {
-    return fetch("/search_word", {
+    return fetch("/api/search_word", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

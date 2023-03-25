@@ -8,7 +8,8 @@ from dbHandler import save_mots_uniques
 from dbHandler import delete_all_tables
 from dbHandler import search_word_db
 from sqlalchemy import create_engine
-from fileHandler import file_content
+from fileHandler import read_directory
+import os
 
 nltk.download('punkt')
 from flask_sqlalchemy import SQLAlchemy
@@ -50,7 +51,7 @@ class frequencesTable(db.Model):
 
 gloabl_file_content = []
 
-@app.route("/tokens", methods=['POST'])
+@app.route("/api/tokens", methods=['POST'])
 def get_current_time():
     # Empty tables
     try :
@@ -58,11 +59,11 @@ def get_current_time():
     except Exception as e:
         print("Error in function delete_all_tables ",str(e))
 
-    file_content_list = file_content('./files')
+    file_content_list = read_directory('./files')
     print(file_content_list)
 
     for file in file_content_list :
-        file_name = file["file_name"]
+        file_name = file["file_path"]
         text = file["content"]  
 
         # Text tookenization
@@ -88,8 +89,9 @@ def get_current_time():
     return mot_freq
 
 
-@app.route("/search_word", methods=['POST'])
+@app.route("/api/search_word", methods=['POST'])
 def search_word():
+    text_freq =[]
     body = request.get_json()
     word_to_search = body["word"]
     print("////////////////  ",word_to_search)

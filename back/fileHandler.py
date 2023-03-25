@@ -1,16 +1,16 @@
 import os
 
 
-def file_content (directory_path):
+def read_directory (directory_path):
     file_content_list = []
-    for filename in os.listdir(directory_path):
-        file_path = os.path.join(directory_path, filename)
-        if os.path.isfile(file_path):
-            with open(file_path, 'r') as f:
-                file_content_list.append({
-                    'file_name': filename,
-                    'content': f.read(),
-                })
-    
+    for root, dirs, files in os.walk(directory_path):
+        for file in files:
+            if file.endswith(".txt"):
+                file_path = os.path.join(root, file)
+                with open(file_path, "r") as f:
+                    file_content_list.append({
+                        'file_path': file_path,
+                        'content': f.read(),
+                    })
 
     return file_content_list

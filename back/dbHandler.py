@@ -84,7 +84,6 @@ def delete_all_tables(db,textes_table,frequences_table,mots_uniques_table):
     return 'All tables have been emptied!'
 
     
-file_path = './files/'
 
 def search_word_db(db,word):
     mot_response = []
@@ -107,10 +106,9 @@ def search_word_db(db,word):
         with db.engine.begin() as conn:
             query = f"SELECT textes.titre, frequences.frequence FROM frequences INNER JOIN textes ON frequences.texte_id = textes.id WHERE frequences.mot_unique_id = '{word_id}'"
             text_freq = conn.exec_driver_sql(query).all()
-
         # Search the frequency of the appearence of the word in each file 
         for row in text_freq:
-            with open(file_path+row[0], 'r') as f:
+            with open(row[0], 'r') as f:
                 formatted_data.append({
                     'texte_title': row[0],
                     'frequences': row[1],
