@@ -65,7 +65,6 @@ def get_current_time():
     for file in file_content_list :
         file_name = file["file_path"]
         text = file["content"]  
-
         # Text tookenization
         try :
             mot_freq = fileTookenizer(text) 

@@ -1,18 +1,33 @@
 import React, { useState } from "react";
-import { dbApi } from "../hooks/dp_api";
 import JSON5 from "json5";
 import Image from "./wordsearch.jpg";
 import { useNavigate } from "react-router-dom";
+import { dbApi } from "../hooks/dp_api";
 
 function SearchPage() {
   const [query, setQuery] = useState("");
+  const [disabled, setDisabled] = useState("");
   const [results, setResults] = useState([]);
   const { searchWord } = dbApi();
 
   let navigate = useNavigate();
-  const routeChange = () => {
-    let path = `newPath`;
-    navigate(path);
+  const routeChange = (key) => {
+    // console.log("key => ", key);
+    const content = results[key].content;
+    const path = `/parser`;
+    navigate(path, { state: content });
+  };
+  const { sendText } = dbApi();
+
+  const startIndexation = () => {
+    setDisabled("true");
+    sendText()
+      .then((data) => {
+        setDisabled("");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
   const handleSearch = async () => {
     try {
@@ -36,6 +51,14 @@ function SearchPage() {
 
   return (
     <div className="container">
+      <button
+        class="btn btn-danger btn-lg position-absolute top-0 end-0 m-5"
+        disabled={disabled}
+        onClick={startIndexation}
+      >
+        Index
+      </button>
+
       <div className="row justify-content-center mt-5">
         <div className="col-md-6">
           <div className="input-group" style={{ marginTop: "50px" }}>
@@ -92,7 +115,7 @@ function SearchPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {results.map((item) => (
+                        {results.map((item, key) => (
                           <tr key={item.texte_title}>
                             <td class="text-truncate">{item.texte_title}</td>
                             <td class="text-truncate">{item.frequences}</td>
@@ -101,7 +124,7 @@ function SearchPage() {
                               <button
                                 className="btn btn-success"
                                 type="button"
-                                onClick={handleSearch}
+                                onClick={() => routeChange(key)}
                               >
                                 Content
                               </button>{" "}

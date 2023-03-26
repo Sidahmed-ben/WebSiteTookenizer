@@ -116,7 +116,6 @@ def search_word_db(db,word):
                 })
 
         print(formatted_data)
-
     return formatted_data
 
 

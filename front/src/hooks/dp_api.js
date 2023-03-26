@@ -1,11 +1,10 @@
 export const dbApi = () => {
-  const sendText = async (titre, text) => {
+  const sendText = async () => {
     return fetch("/api/tokens", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ titre, text }),
     })
       .then((resp) => {
         const data = resp.text();

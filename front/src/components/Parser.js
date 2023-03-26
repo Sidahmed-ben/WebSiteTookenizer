@@ -3,57 +3,28 @@ import { text } from "./text.js";
 import React, { useState, useEffect } from "react";
 
 import { dbApi } from "../hooks/dp_api";
-import { Utils } from "../utils/utils.js";
 import JSON5 from "json5";
+import { useLocation } from "react-router-dom";
 
 const Parser = () => {
   const [tokens, setTokens] = useState({});
   const { sendText } = dbApi();
-  const { readDirectory } = Utils();
+  const { state } = useLocation();
 
   useEffect(() => {
-    const titre = "monTitre";
-    sendText(titre, text)
-      .then((data) => {
-        const object = JSON5.parse(data);
-        setTokens(object);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    console.log(state);
   }, []);
 
   return (
     <div>
-      <h2>
-        <br></br>
-        Paragraphe :<br></br>
-        <br></br>
-        {text}
-      </h2>
-      <br></br>
-      <br></br>
-      <br></br>
-      <table
-        style={{ width: "500px", margin: "auto" }}
-        className="table table-bordered table-striped"
-      >
-        <thead>
-          <tr>
-            <th>Mots</th>
-            <th>Fréquences</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tokens &&
-            Object.entries(tokens).map(([key, value]) => (
-              <tr key={key}>
-                <td>{key}</td>
-                <td>{value}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <div class="container">
+        <h1 class="text-center my-5">Text Content</h1>
+        <div class="row">
+          <div class="col-md-6 offset-md-3">
+            <p class="lead text-center">{state}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
