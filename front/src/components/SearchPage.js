@@ -4,24 +4,26 @@ import Image from "./wordsearch.jpg";
 import { useNavigate } from "react-router-dom";
 import { dbApi } from "../hooks/dp_api";
 
+// The page that searchs for a word
 function SearchPage() {
   const [query, setQuery] = useState("");
   const [disabled, setDisabled] = useState("");
   const [results, setResults] = useState([]);
   const { searchWord } = dbApi();
-
   let navigate = useNavigate();
+  const { indexation } = dbApi();
+
+  // This page will change the root to TextContent page
   const routeChange = (key) => {
-    // console.log("key => ", key);
     const content = results[key].content;
-    const path = `/parser`;
+    const path = `/text-content`;
     navigate(path, { state: content });
   };
-  const { sendText } = dbApi();
 
+  // This function will start indexation when click on the index button
   const startIndexation = () => {
     setDisabled("true");
-    sendText()
+    indexation()
       .then((data) => {
         setDisabled("");
       })
@@ -29,6 +31,8 @@ function SearchPage() {
         console.error(error);
       });
   };
+
+  // This function handles word searching
   const handleSearch = async () => {
     try {
       searchWord(query)
@@ -43,10 +47,6 @@ function SearchPage() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleItemClick = (item) => {
-    console.log(item);
   };
 
   return (

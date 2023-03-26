@@ -7,6 +7,7 @@ from nltk.stem.snowball import FrenchStemmer
 
 
 def fileTookenizer(text):
+    # Set the more useful symbols
     symboles = ["'",'.', ',', ';', ':', '!', '?', '"', '(', ')', '[', ']', '{', '}', '+', '-', '*', '/', '=', '<', '>', '≤', '≥', '%', '$', '€', '£', '¥', '元', '@', '#', '&', '~', '/', '\\', '¿', '☎', '✉', '❌', '✔', 'ℹ', '⚠', '❓', '⏰', '📅', '📆', '🎂', '←', '→', '↑', '↓', '👉', '🏠', '⭐', '❤']
     symboles = set(symboles)
     # Download stopword list
@@ -15,13 +16,12 @@ def fileTookenizer(text):
     stemmer = FrenchStemmer()
     # Replace symboles by spaces
     for symb in symboles :
-        # print("symbole => ",symb)
         text = text.replace(symb, " ")
-    # print("================> ",text)
     # Convert to lowerCase
     words = nltk.word_tokenize(text.lower())
     # Get stopWords
     stop_words = set(stopwords.words('french')) 
+    # Initialize word_freq object
     word_freq = {}
     # Loop words
     for word in words:
@@ -35,7 +35,5 @@ def fileTookenizer(text):
                 word_freq[word] += 1
         else :
             continue
-    # print(word_freq)
-    response = word_freq
-
-    return response
+    # return word_freq
+    return word_freq

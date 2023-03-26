@@ -1,16 +1,11 @@
-import { text } from "./text.js";
+import React, { useEffect } from "react";
 
-import React, { useState, useEffect } from "react";
-
-import { dbApi } from "../hooks/dp_api";
-import JSON5 from "json5";
 import { useLocation } from "react-router-dom";
 
-const Parser = () => {
-  const [tokens, setTokens] = useState({});
-  const { sendText } = dbApi();
+// This page will display the content of the text
+const TextContent = () => {
+  // state variable is the text content to display
   const { state } = useLocation();
-
   useEffect(() => {
     console.log(state);
   }, []);
@@ -20,7 +15,7 @@ const Parser = () => {
       <div class="container">
         <h1 class="text-center my-5">Text Content</h1>
         <div class="row">
-          <div class="col-md-6 offset-md-3">
+          <div class="col-md-10 offset-md-1">
             <p class="lead text-center">{state}</p>
           </div>
         </div>
@@ -29,4 +24,4 @@ const Parser = () => {
   );
 };
 
-export default Parser;
+export default TextContent;

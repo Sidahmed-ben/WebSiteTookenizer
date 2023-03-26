@@ -1,5 +1,7 @@
+// This function handles all api calls
 export const dbApi = () => {
-  const sendText = async () => {
+  // The function that starts indexation
+  const indexation = async () => {
     return fetch("/api/tokens", {
       method: "POST",
       headers: {
@@ -15,6 +17,7 @@ export const dbApi = () => {
       });
   };
 
+  // The function that searchs for word
   const searchWord = async (word) => {
     return fetch("/api/search_word", {
       method: "POST",
@@ -34,6 +37,6 @@ export const dbApi = () => {
 
   return {
     searchWord,
-    sendText,
+    indexation,
   };
 };

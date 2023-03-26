@@ -4,21 +4,6 @@ from nltk.stem.snowball import FrenchStemmer
 
 
 
-def table_data(MyTable):
-    # Query the table
-    data = MyTable.query.all()
-    # Format the data
-    formatted_data = []
-    for row in data:
-        formatted_data.append({
-            'id': row.id,
-            'titre': row.titre,
-            'contenu': row.contenu
-        })
-    # Return the data as JSON
-    return {'data': formatted_data}
-
-
 def save_text(db,textes_table, titre):
     data = textes_table(titre=titre, contenu="")
     db.session.add(data)
@@ -30,17 +15,12 @@ def save_text(db,textes_table, titre):
 def save_mots_uniques(db,mots_uniques_table ,frequences_table,mot_freq_list, new_text_id):
     # Query the table
     data = mots_uniques_table.query.all()
-    # # Format the data
+    # Format the data
     formatted_data = []
     existant_word_id = -1
-    # print(mot_freq)
     for word, freq in mot_freq_list.items():
-        # print(word, freq)
         for row in data :
-            #   print(row.id)
-            # print(word +" => "+ row.mot)
             if(word == row.mot):
-                # print(" Word '"+word+"' Already exists ")
                 existant_word_id = row.id
                 break
             else :
