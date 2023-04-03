@@ -6,9 +6,6 @@ import { useLocation } from "react-router-dom";
 const TextContent = () => {
   // state variable is the text content to display
   const { state } = useLocation();
-  useEffect(() => {
-    console.log(state);
-  }, []);
 
   return (
     <div>

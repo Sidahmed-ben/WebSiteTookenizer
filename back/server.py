@@ -9,10 +9,8 @@ from dbHandler import search_word_db
 from sqlalchemy import create_engine
 from fileHandler import read_directory
 import os
-
 nltk.download('punkt')
 from flask_sqlalchemy import SQLAlchemy
-
 
 app = Flask(__name__)
 
@@ -58,7 +56,6 @@ def get_current_time():
 
     # Get the list of files with their contents and their paths 
     file_content_list = read_directory('./files')
-
     # For each file 
     for file in file_content_list :
         # Get the file path
@@ -71,7 +68,6 @@ def get_current_time():
             mot_freq = fileTookenizer(text) 
         except Exception as e:
             print("Error in function fileTookenizer ",str(e))
-
         try :
             # Save the text name in the data table 
             new_text_id = save_text(db,textesTable ,file_name)
@@ -81,6 +77,7 @@ def get_current_time():
         try :
             # Save words in the table mots_uniques + freqences
             resp = save_mots_uniques(db,motsUniquesTable,frequencesTable,mot_freq, new_text_id)
+            print(" Finished with file => "+file_name )
         except Exception as e:
             print("Error in function save_mots_uniques ",str(e))
 
@@ -103,8 +100,6 @@ def search_word():
         print("Error in function search_word ",str(e))
 
     return text_freq
-
-    
 
 if __name__ == "__main__" :
     app.run(debug=True)

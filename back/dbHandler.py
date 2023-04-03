@@ -3,7 +3,7 @@ import os
 from nltk.stem.snowball import FrenchStemmer
 
 
-
+# The function that saves text into textes table
 def save_text(db,textes_table, titre):
     data = textes_table(titre=titre, contenu="")
     db.session.add(data)
@@ -11,13 +11,14 @@ def save_text(db,textes_table, titre):
     # Return 
     return data.id
 
-
+# The function that saves unique words
 def save_mots_uniques(db,mots_uniques_table ,frequences_table,mot_freq_list, new_text_id):
     # Query the table
     data = mots_uniques_table.query.all()
     # Format the data
     formatted_data = []
     existant_word_id = -1
+    # Verify if the word doesn't exist
     for word, freq in mot_freq_list.items():
         for row in data :
             if(word == row.mot):
@@ -25,15 +26,16 @@ def save_mots_uniques(db,mots_uniques_table ,frequences_table,mot_freq_list, new
                 break
             else :
                 continue
-
+       
+        # If the word doesn't exist
         if(existant_word_id != -1):
             # Add the association between the word and frequences to frequences table
             new_row = frequences_table(texte_id=new_text_id, mot_unique_id=existant_word_id,frequence = freq)
             db.session.add(new_row)
             db.session.commit()
             existant_word_id = -1
-            # print(" Element added succ to frequences table ",new_row.id)
 
+        # If the word exists
         else : 
             # Add the new word to mots_uniques_table 
             nouveau_mot = mots_uniques_table(mot=word)
@@ -48,6 +50,7 @@ def save_mots_uniques(db,mots_uniques_table ,frequences_table,mot_freq_list, new
     return {'Doc with id '+str(new_text_id)+' Indexed Successfully'}
 
 
+# The function that empty all tables
 def delete_all_tables(db,textes_table,frequences_table,mots_uniques_table):
     # Empty frequence table
     db.session.query(frequences_table).delete()
@@ -64,29 +67,27 @@ def delete_all_tables(db,textes_table,frequences_table,mots_uniques_table):
     return 'All tables have been emptied!'
 
     
-
+# The function that searchs for the word in the database
 def search_word_db(db,word):
     mot_response = []
     formatted_data = []
     # Stem the word before starting research 
     stemmer = FrenchStemmer()
     word = stemmer.stem(word)
-    print("Stem => "+word)
     # Search the word on mots_uniques table.
     with db.engine.begin() as conn:
         mot_response = conn.exec_driver_sql(f"SELECT * FROM mots_uniques WHERE mots_uniques.mot = '{word}'").all()
-    # The word doesn't exist in files 
+    # The word doesn't exist in database 
     if(len(mot_response) == 0):
         return []
     else : 
         text_freq = []
         # Get the id of the word on table
         word_id = mot_response[0][0]
-        # print(" Word id => ", word_id)
         with db.engine.begin() as conn:
             query = f"SELECT textes.titre, frequences.frequence FROM frequences INNER JOIN textes ON frequences.texte_id = textes.id WHERE frequences.mot_unique_id = '{word_id}'"
             text_freq = conn.exec_driver_sql(query).all()
-        # Search the frequency of the appearence of the word in each file 
+        # Search the frequency of the word appearence in each file 
         for row in text_freq:
             with open(row[0], 'r') as f:
                 formatted_data.append({
@@ -94,8 +95,7 @@ def search_word_db(db,word):
                     'frequences': row[1],
                     'content': f.read(),
                 })
-
-        print(formatted_data)
+    # return the formated data
     return formatted_data
 
 

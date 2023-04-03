@@ -35,15 +35,16 @@ function SearchPage() {
   // This function handles word searching
   const handleSearch = async () => {
     try {
-      searchWord(query)
-        .then((data) => {
-          const object = JSON5.parse(data);
-          console.log(" Received data => ", object);
-          setResults(object);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      if (query.length > 0) {
+        searchWord(query)
+          .then((data) => {
+            const object = JSON5.parse(data);
+            setResults(object);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -105,7 +106,7 @@ function SearchPage() {
                   id="project-team-scroll"
                   tabindex="1"
                 >
-                  {results.length > 0 && (
+                  {results.length ? (
                     <table class="table table-hover table-s ">
                       <thead>
                         <tr>
@@ -133,6 +134,8 @@ function SearchPage() {
                         ))}
                       </tbody>
                     </table>
+                  ) : (
+                    <span> No Files found... </span>
                   )}
                 </div>
               </div>
